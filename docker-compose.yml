@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  bscnode:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NETWORK: ${NETWORK}
+        VERSION: ${VERSION}
+    container_name: bscnode
+    ports:
+      - "8545:8545"
+      - "8546:8546"
+      - "6060:6060"
+      - "30311:30311"
+      - "30311:30311/udp"
+    volumes:
+      - chain_data:/root/.ethereum
+    command: --syncmode ${MODE}
+    hostname: bscnode
+    image: bscnode-image
+    networks:
+      - node-access-network
+    restart: on-failure
+
+volumes:
+  chain_data:
+
+networks:
+  node-access-network:
+    external: true
