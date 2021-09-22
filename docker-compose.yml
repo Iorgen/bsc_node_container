@@ -3,8 +3,8 @@ version: '3.7'
 services:
   bscnode:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./src
+      dockerfile: Dockerfile_modified
       args:
         NETWORK: ${NETWORK}
         VERSION: ${VERSION}
@@ -16,16 +16,13 @@ services:
       - "30311:30311"
       - "30311:30311/udp"
     volumes:
-      - chain_data:/root/.ethereum
-    command: --syncmode ${MODE}
+      - ./node:/root/.ethereum
+    command: --syncmode ${MODE} --cache 18000 --rpc.allow-unprotected-txs --txlookuplimit 0 --verbosity 5
     hostname: bscnode
     image: bscnode-image
     networks:
       - node-access-network
     restart: on-failure
-
-volumes:
-  chain_data:
 
 networks:
   node-access-network:
